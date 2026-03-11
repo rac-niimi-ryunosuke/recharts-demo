@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Dashboard from './components/Dashboard';
+import ChartPage from './components/ChartPage';
 import SalesBarChart from './components/SalesBarChart';
 import AccessLineChart from './components/AccessLineChart';
 import CategoryPieChart from './components/CategoryPieChart';
@@ -15,6 +16,7 @@ import BrushZoomChart from './components/BrushZoomChart';
 import SyncedCharts from './components/SyncedCharts';
 import StackedBarChart from './components/StackedBarChart';
 import CustomTooltipChart from './components/CustomTooltipChart';
+import explanations from './data/explanations';
 import './App.css';
 
 const tabs = [
@@ -57,8 +59,6 @@ const chartComponents = {
 export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
 
-  const ChartComponent = chartComponents[activeTab];
-
   return (
     <div className="app">
       <nav className="tab-nav">
@@ -76,9 +76,11 @@ export default function App() {
         {activeTab === 'dashboard' ? (
           <Dashboard />
         ) : (
-          <div className="single-chart">
-            <ChartComponent />
-          </div>
+          <ChartPage
+            chartId={activeTab}
+            chart={chartComponents[activeTab]}
+            explanation={explanations[activeTab]}
+          />
         )}
       </main>
     </div>
