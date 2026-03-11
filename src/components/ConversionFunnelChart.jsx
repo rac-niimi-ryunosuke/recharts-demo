@@ -1,5 +1,5 @@
 import {
-  FunnelChart, Funnel, Cell, Tooltip, LabelList, ResponsiveContainer
+  FunnelChart, Funnel, Tooltip, LabelList, ResponsiveContainer
 } from 'recharts';
 
 const data = [
@@ -16,16 +16,9 @@ export default function ConversionFunnelChart() {
       <h2>コンバージョンファネル</h2>
       <ResponsiveContainer width="100%" height={300}>
         <FunnelChart>
-          <Tooltip formatter={(value) => [`${value.toLocaleString()}人`, '']} />
+          <Tooltip />
           <Funnel dataKey="value" data={data} isAnimationActive>
-            {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={entry.fill} />
-            ))}
-            <LabelList position="right" content={({ x, y, width, height, value, name }) => (
-              <text x={x + width + 10} y={y + height / 2} fill="#333" fontSize={13} dominantBaseline="middle">
-                {name}: {value.toLocaleString()}
-              </text>
-            )} />
+            <LabelList position="right" dataKey="name" />
           </Funnel>
         </FunnelChart>
       </ResponsiveContainer>

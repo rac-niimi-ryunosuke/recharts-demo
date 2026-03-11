@@ -4,9 +4,11 @@ const explanations = {
     overview: 'Rechartsで最も基本的なグラフ。データの大小比較に最適で、月別売上などの可視化によく使います。',
     points: [
       'データは「配列 of オブジェクト」の形で渡す（Recharts共通）',
-      'ResponsiveContainer で囲むとレスポンシブ対応になる',
+      'ResponsiveContainer で囲むと親要素の幅に合わせて自動リサイズ',
       'XAxis / YAxis / CartesianGrid / Tooltip / Legend を組み合わせるだけ',
-      'radius プロパティで棒の角を丸くできる',
+      'radius={[4, 4, 0, 0]} で棒の上側の角を丸くできる（左上, 右上, 右下, 左下の順）',
+      'Tooltip の formatter で表示フォーマットをカスタマイズ（例: 「420万円」のように単位を付加）',
+      'margin でグラフ領域の余白を調整（ラベルが切れるときに使う）',
     ],
     code: `// データの形（全グラフ共通パターン）
 const data = [
@@ -17,16 +19,41 @@ const data = [
 
 // コンポーネントの組み合わせ
 <ResponsiveContainer width="100%" height={300}>
-  <BarChart data={data}>
+  <BarChart data={data}
+    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
     <CartesianGrid strokeDasharray="3 3" />
     <XAxis dataKey="month" />
     <YAxis />
-    <Tooltip />
+    <Tooltip
+      formatter={(value) => [\`\${value}万円\`, '売上']} />
     <Legend />
-    <Bar dataKey="売上" fill="#8884d8" />
+    <Bar dataKey="売上" fill="#8884d8"
+         radius={[4, 4, 0, 0]} />
   </BarChart>
 </ResponsiveContainer>`,
-    useCase: '管理画面の売上レポート、KPIダッシュボード、月次・週次の実績比較など。最もよく使うグラフ。',
+    useCase: '管理画面の売上レポート、KPIダッシュボード、月次・週次の実績比較など。',
+    faq: [
+      {
+        q: 'Y軸の目盛り（0, 200, 400…）は自動で付くの？',
+        a: 'はい。<YAxis /> を置くだけでデータの最小値〜最大値から自動計算されます。domain={[0, 1000]} で範囲を固定したり、tickCount={5} で目盛りの数を指定することもできます。',
+      },
+      {
+        q: 'radius って何？',
+        a: '棒の四隅の角丸を指定するプロパティです。radius={[4, 4, 0, 0]} は「左上4px, 右上4px, 右下0, 左下0」で上だけ丸くなります。見た目の印象がかなり変わるのでおすすめ。',
+      },
+      {
+        q: 'Tooltip に「万円」を付けたいときは？',
+        a: 'formatter プロパティに関数を渡します。formatter={(value) => [`${value}万円`, \'売上\']} のように [表示値, ラベル名] の配列を返せばOK。',
+      },
+      {
+        q: 'グラフの色を変えたいときは？',
+        a: 'Bar の fill プロパティを変更するだけです。fill="#ff7300" のように好きな色を指定できます。',
+      },
+      {
+        q: 'X軸のラベルが長くて重なるときは？',
+        a: 'XAxis に angle={-45} textAnchor="end" を付けると斜めに表示されます。また interval={0} で全ラベルを表示、interval="preserveStartEnd" で自動間引きもできます。',
+      },
+    ],
   },
 
   stacked: {
@@ -115,11 +142,11 @@ const data = [
 
   composed: {
     title: '複合グラフ（ComposedChart）',
-    overview: '棒・折れ線・エリアを1つのグラフに混在。実務で最も使用頻度が高いパターン。',
+    overview: '棒・折れ線・エリアを1つのグラフに混在。',
     points: [
       'ComposedChart の中に Bar, Line, Area を自由に配置',
       'yAxisId で左右2軸を使い分けられる（売上と前年比など単位が違うデータ）',
-      '実務では「売上（棒）+ 前年比（折れ線）」が定番',
+      '「売上（棒）+ 前年比（折れ線）」などの使い方が定番',
     ],
     code: `<ComposedChart data={data}>
   {/* 左軸: 売上・利益（万円） */}
@@ -323,6 +350,162 @@ const data = {
 // 片方にマウスを乗せると
 // もう片方のTooltipも追従する`,
     useCase: '売上と客単価の比較、PVとCVRの関係、温度と湿度の並列監視など。',
+  },
+
+  bubble: {
+    title: 'バブルチャート（Bubble Chart）',
+    overview: '散布図に「3つ目の変数」を追加。ドットの大きさでデータの量を表現します。ScatterChart + ZAxis で実現。',
+    points: [
+      'ScatterChart ベースで、ZAxis の dataKey に第3変数（販売数など）を指定',
+      'ZAxis の range で円の最小・最大サイズを制御',
+      '3変数の関係を1つのグラフで同時に把握できる',
+      'カスタム Tooltip で各変数を表示すると見やすい',
+    ],
+    code: `// ZAxis で第3変数をバブルサイズに
+<ScatterChart>
+  <XAxis type="number" dataKey="価格" />
+  <YAxis type="number" dataKey="満足度" />
+  <ZAxis type="number" dataKey="販売数"
+         range={[40, 400]} />
+  <Scatter data={data} fill="#8884d8"
+           fillOpacity={0.6} />
+</ScatterChart>`,
+    useCase: '商品分析（価格×満足度×販売数）、市場マッピング、ポートフォリオ分析など。',
+  },
+
+  nestedpie: {
+    title: '二重円グラフ（Nested Pie）',
+    overview: '内側と外側に2つの Pie を配置。大分類と小分類の階層的な構成比を同時に表現できます。',
+    points: [
+      '1つの PieChart に Pie を2つ配置（innerRadius / outerRadius で位置を分ける）',
+      '内側 = 小分類、外側 = 大分類のように階層を表現',
+      'Cell で個別に色を指定',
+    ],
+    code: `<PieChart>
+  {/* 内側: 小分類 */}
+  <Pie data={innerData} innerRadius={0}
+       outerRadius={70} dataKey="value">
+    {innerData.map((_, i) => (
+      <Cell key={i} fill={INNER_COLORS[i]} />
+    ))}
+  </Pie>
+  {/* 外側: 大分類 */}
+  <Pie data={outerData} innerRadius={80}
+       outerRadius={110} dataKey="value">
+    {outerData.map((_, i) => (
+      <Cell key={i} fill={OUTER_COLORS[i]} />
+    ))}
+  </Pie>
+</PieChart>`,
+    useCase: 'カテゴリ→サブカテゴリの売上構成、部門→チーム別の人員比率、地域→都市別のシェアなど。',
+  },
+
+  waterfall: {
+    title: 'ウォーターフォールチャート',
+    overview: '数値の増減を積み上げて表示。売上から各コストを引いて利益に至る過程を可視化します。',
+    points: [
+      'StackedBar で透明な土台(base) + 値(value)を積み上げて実現',
+      'Cell で増加=緑、減少=赤、合計=紫のように色分け',
+      'ReferenceLine でゼロ基準線を表示',
+      'Recharts ネイティブにはないが、工夫で作れるパターン',
+    ],
+    code: `// 透明な土台 + 実際の値の積み上げ
+<Bar dataKey="base" stackId="waterfall"
+     fill="transparent" />
+<Bar dataKey="value" stackId="waterfall">
+  {data.map((entry, i) => (
+    <Cell key={i}
+      fill={entry.isTotal ? '#8884d8'
+        : entry.raw >= 0 ? '#52c41a' : '#ff4d4f'} />
+  ))}
+</Bar>`,
+    useCase: '損益計算書の可視化、予算の増減分析、プロジェクトコストの内訳表示など。',
+  },
+
+  gauge: {
+    title: 'ゲージチャート（Gauge）',
+    overview: 'PieChart の startAngle/endAngle を使って半円のメーター型グラフを作成。KPIの達成率表示に。',
+    points: [
+      'PieChart + Pie の startAngle=180, endAngle=0 で半円に',
+      'Cell で達成部分と残り部分に色を分ける',
+      'innerRadius / outerRadius でリングの太さを調整',
+      '中央にテキストを重ねて数値を表示',
+    ],
+    code: `const gaugeData = [
+  { name: '達成', value: 72 },
+  { name: '残り', value: 28 },
+];
+
+<PieChart>
+  <Pie data={gaugeData}
+    startAngle={180} endAngle={0}
+    innerRadius={80} outerRadius={120}
+    dataKey="value" stroke="none">
+    <Cell fill="#52c41a" />
+    <Cell fill="#f0f0f0" />
+  </Pie>
+</PieChart>`,
+    useCase: 'KPI達成率、サーバー負荷率、プロジェクト進捗、バッテリー残量など単一指標の表示。',
+  },
+
+  candlestick: {
+    title: 'ローソク足チャート（Candlestick）',
+    overview: '株価の始値・終値・高値・安値を1本のローソクで表現。Bar + ErrorBar + Cell の組み合わせで実現します。',
+    points: [
+      'ComposedChart + stacked Bar で「透明な土台 + ローソクの実体」を描画',
+      'ErrorBar で上ヒゲ（高値）を表現',
+      'Cell で陽線（上昇=緑）と陰線（下降=赤）を色分け',
+      'Recharts ネイティブにはないが、既存コンポーネントの組み合わせで作れる',
+    ],
+    code: `// データ変換: OHLC → stacked bar 用
+const chartData = rawData.map(d => ({
+  ...d,
+  base: Math.min(d.open, d.close),
+  body: Math.abs(d.close - d.open),
+  errorUp: d.high - Math.max(d.open, d.close),
+  isUp: d.close >= d.open,
+}));
+
+// 透明な土台 + 実体 + ヒゲ
+<Bar dataKey="base" stackId="candle"
+     fill="transparent" />
+<Bar dataKey="body" stackId="candle">
+  {data.map((d, i) => (
+    <Cell key={i}
+      fill={d.isUp ? '#52c41a' : '#ff4d4f'} />
+  ))}
+  <ErrorBar dataKey="errorUp"
+    direction="y" stroke="#333" />
+</Bar>`,
+    useCase: '株価チャート、為替レートの推移、商品先物の価格変動など金融データの可視化。',
+  },
+
+  refline: {
+    title: '参照線・参照エリア（ReferenceLine / ReferenceArea）',
+    overview: 'グラフに目標線や警告ゾーンを重ねて表示。データの文脈を伝えるのに効果的です。',
+    points: [
+      'ReferenceLine で水平・垂直の基準線を描画（目標値、平均値など）',
+      'ReferenceArea で特定の範囲をハイライト（危険ゾーン、好調期間など）',
+      'label プロパティでラベルを付けられる',
+      'strokeDasharray で破線にすると目立ちすぎない',
+    ],
+    code: `<LineChart data={data}>
+  {/* 危険ゾーン（赤い背景） */}
+  <ReferenceArea y1={50} y2={70}
+    fill="#ff4d4f" fillOpacity={0.1} />
+
+  {/* 好調期間のハイライト */}
+  <ReferenceArea x1="6月" x2="8月"
+    fill="#52c41a" fillOpacity={0.1} />
+
+  {/* 目標線 */}
+  <ReferenceLine y={80} stroke="#1890ff"
+    strokeDasharray="5 5"
+    label="目標 80%" />
+
+  <Line dataKey="KPI" stroke="#8884d8" />
+</LineChart>`,
+    useCase: 'KPI監視ダッシュボード、SLA基準線の表示、異常値の範囲表示、目標vs実績の比較。',
   },
 
   custom: {

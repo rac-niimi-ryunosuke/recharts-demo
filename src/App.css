@@ -46,7 +46,7 @@
 /* メインコンテンツ */
 .main-content {
   padding: 24px;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
 }
 
@@ -111,10 +111,23 @@
   margin: 0 auto;
 }
 
-/* チャートページ（個別表示 + 解説） */
-.chart-page {
-  max-width: 900px;
-  margin: 0 auto;
+/* チャートページ（2カラムレイアウト） */
+.chart-page-layout {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.chart-page-left {
+  flex: 1;
+  min-width: 0;
+  position: sticky;
+  top: 60px;
+}
+
+.chart-page-right {
+  flex: 1;
+  min-width: 0;
 }
 
 .chart-page-graph {
@@ -122,7 +135,32 @@
   border-radius: 12px;
   padding: 24px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-  margin-bottom: 20px;
+}
+
+.source-toggle {
+  display: block;
+  margin: 16px auto 0;
+  padding: 8px 20px;
+  background: #f0f2f5;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  color: #555;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.source-toggle:hover {
+  background: #e6f7ff;
+  border-color: #1890ff;
+  color: #1890ff;
+}
+
+.source-code {
+  margin-top: 12px;
+  font-size: 12px;
+  max-height: 300px;
+  overflow-y: auto;
 }
 
 .chart-page-explanation {
@@ -213,6 +251,33 @@
   height: 6px;
   background: #d48806;
   border-radius: 50%;
+}
+
+/* FAQ */
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.faq-item {
+  background: #f8f9ff;
+  border-radius: 8px;
+  padding: 14px 18px;
+  border-left: 3px solid #1890ff;
+}
+
+.faq-q {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1890ff;
+  margin-bottom: 6px;
+}
+
+.faq-a {
+  font-size: 14px;
+  color: #444;
+  line-height: 1.7;
 }
 
 /* Aboutページ */
@@ -387,6 +452,13 @@
   padding-left: 16px;
 }
 
+/* 用語ツールチップ */
+.about-page abbr[title] {
+  text-decoration: none;
+  border-bottom: 1px dotted #999;
+  cursor: help;
+}
+
 /* About内code */
 .about-card code {
   background: #f0f2f5;
@@ -403,6 +475,147 @@
   color: #cdd6f4;
 }
 
+/* 5ステップページ */
+.step-by-step-page {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.step-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+  padding: 0 20px;
+}
+
+.step-connector {
+  flex: 1;
+  height: 3px;
+  max-width: 80px;
+  background: #e8e8e8;
+  transition: background 0.3s;
+}
+
+.step-connector.active {
+  background: #1890ff;
+}
+
+.step-nav-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 3px solid #e8e8e8;
+  background: #fff;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.2s;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.step-nav-btn .step-nav-num {
+  font-size: 15px;
+  font-weight: 700;
+  color: #999;
+}
+
+.step-nav-btn.done {
+  border-color: #1890ff;
+  background: #e6f7ff;
+}
+
+.step-nav-btn.done .step-nav-num {
+  color: #1890ff;
+}
+
+.step-nav-btn.active {
+  border-color: #1890ff;
+  background: #1890ff;
+  transform: scale(1.15);
+}
+
+.step-nav-btn.active .step-nav-num {
+  color: #fff;
+}
+
+.step-title {
+  font-size: 22px;
+  color: #1a1a2e;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.step-desc {
+  font-size: 15px;
+  color: #666;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.step-graph-area {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 16px;
+  overflow-x: auto;
+}
+
+.step-code-area,
+.step-diff {
+  margin-bottom: 16px;
+}
+
+.step-code-area h4,
+.step-diff h4 {
+  font-size: 14px;
+  color: #1890ff;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.diff-block .diff-added {
+  background: rgba(82, 196, 26, 0.15);
+}
+
+.step-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.step-btn {
+  padding: 10px 28px;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  background: #fff;
+  color: #333;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.step-btn:hover:not(:disabled) {
+  border-color: #1890ff;
+  color: #1890ff;
+}
+
+.step-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.step-indicator {
+  font-size: 14px;
+  color: #999;
+  font-weight: 600;
+}
+
 /* グラフコンテナ */
 .chart-container h2 {
   font-size: 18px;
@@ -410,6 +623,65 @@
   margin-bottom: 16px;
   padding-left: 8px;
   border-left: 4px solid #1890ff;
+}
+
+/* チャートコントロール共通 */
+.chart-controls,
+.line-type-selector {
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.chart-control-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: #555;
+}
+
+.chart-control-group span {
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.chart-controls select,
+.line-type-selector select {
+  padding: 6px 12px;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  font-size: 14px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.chart-control-check {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  color: #555;
+  cursor: pointer;
+  user-select: none;
+}
+
+.chart-control-check input[type="checkbox"] {
+  accent-color: #1890ff;
+  cursor: pointer;
+}
+
+.chart-control-group input[type="range"] {
+  width: 100px;
+  cursor: pointer;
+}
+
+.line-type-selector label {
+  font-size: 14px;
+  color: #555;
+  font-weight: 500;
 }
 
 /* レスポンシブ */
@@ -437,5 +709,13 @@
 
   .feature-grid {
     grid-template-columns: 1fr;
+  }
+
+  .chart-page-layout {
+    flex-direction: column;
+  }
+
+  .chart-page-left {
+    position: static;
   }
 }

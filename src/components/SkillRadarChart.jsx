@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
@@ -14,9 +15,27 @@ const data = [
 ];
 
 export default function SkillRadarChart() {
+  const [filled, setFilled] = useState(true);
+  const [showA, setShowA] = useState(true);
+  const [showB, setShowB] = useState(true);
+
   return (
     <div className="chart-container">
       <h2>スキル比較レーダー</h2>
+      <div className="chart-controls">
+        <label className="chart-control-check">
+          <input type="checkbox" checked={filled} onChange={(e) => setFilled(e.target.checked)} />
+          塗りつぶし（fillOpacity）
+        </label>
+        <label className="chart-control-check">
+          <input type="checkbox" checked={showA} onChange={(e) => setShowA(e.target.checked)} />
+          Aさん
+        </label>
+        <label className="chart-control-check">
+          <input type="checkbox" checked={showB} onChange={(e) => setShowB(e.target.checked)} />
+          Bさん
+        </label>
+      </div>
       <ResponsiveContainer width="100%" height={300}>
         <RadarChart cx="50%" cy="50%" outerRadius="70%" data={data}>
           <PolarGrid />
@@ -24,8 +43,8 @@ export default function SkillRadarChart() {
           <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fontSize: 10 }} />
           <Tooltip />
           <Legend />
-          <Radar name="Aさん" dataKey="Aさん" stroke="#8884d8" fill="#8884d8" fillOpacity={0.3} />
-          <Radar name="Bさん" dataKey="Bさん" stroke="#82ca9d" fill="#82ca9d" fillOpacity={0.3} />
+          {showA && <Radar name="Aさん" dataKey="Aさん" stroke="#8884d8" fill="#8884d8" fillOpacity={filled ? 0.3 : 0} />}
+          {showB && <Radar name="Bさん" dataKey="Bさん" stroke="#82ca9d" fill="#82ca9d" fillOpacity={filled ? 0.3 : 0} />}
         </RadarChart>
       </ResponsiveContainer>
     </div>

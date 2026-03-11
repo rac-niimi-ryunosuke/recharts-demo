@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
@@ -17,10 +18,35 @@ const data = [
   { month: '12月', 検索: 2200, SNS: 1900, 直接: 650, 広告: 1200 },
 ];
 
+const areaTypes = [
+  { value: 'monotone', label: 'monotone（滑らか）' },
+  { value: 'linear', label: 'linear（直線）' },
+  { value: 'step', label: 'step（階段）' },
+];
+
 export default function TrafficAreaChart() {
+  const [stacked, setStacked] = useState(true);
+  const [areaType, setAreaType] = useState('monotone');
+
+  const stackId = stacked ? '1' : undefined;
+
   return (
     <div className="chart-container">
-      <h2>流入元別トラフィック（積み上げ）</h2>
+      <h2>流入元別トラフィック</h2>
+      <div className="chart-controls">
+        <label className="chart-control-group">
+          <span>補間タイプ:</span>
+          <select value={areaType} onChange={(e) => setAreaType(e.target.value)}>
+            {areaTypes.map((t) => (
+              <option key={t.value} value={t.value}>{t.label}</option>
+            ))}
+          </select>
+        </label>
+        <label className="chart-control-check">
+          <input type="checkbox" checked={stacked} onChange={(e) => setStacked(e.target.checked)} />
+          積み上げ（stackId）
+        </label>
+      </div>
       <ResponsiveContainer width="100%" height={300}>
         <AreaChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" />
@@ -28,10 +54,10 @@ export default function TrafficAreaChart() {
           <YAxis />
           <Tooltip />
           <Legend />
-          <Area type="monotone" dataKey="検索" stackId="1" stroke="#8884d8" fill="#8884d8" fillOpacity={0.6} />
-          <Area type="monotone" dataKey="SNS" stackId="1" stroke="#82ca9d" fill="#82ca9d" fillOpacity={0.6} />
-          <Area type="monotone" dataKey="直接" stackId="1" stroke="#ffc658" fill="#ffc658" fillOpacity={0.6} />
-          <Area type="monotone" dataKey="広告" stackId="1" stroke="#ff7c7c" fill="#ff7c7c" fillOpacity={0.6} />
+          <Area type={areaType} dataKey="検索" stackId={stackId} stroke="#8884d8" fill="#8884d8" fillOpacity={0.6} />
+          <Area type={areaType} dataKey="SNS" stackId={stackId} stroke="#82ca9d" fill="#82ca9d" fillOpacity={0.6} />
+          <Area type={areaType} dataKey="直接" stackId={stackId} stroke="#ffc658" fill="#ffc658" fillOpacity={0.6} />
+          <Area type={areaType} dataKey="広告" stackId={stackId} stroke="#ff7c7c" fill="#ff7c7c" fillOpacity={0.6} />
         </AreaChart>
       </ResponsiveContainer>
     </div>

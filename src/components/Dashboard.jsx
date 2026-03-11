@@ -13,13 +13,24 @@ import BrushZoomChart from './BrushZoomChart';
 import SyncedCharts from './SyncedCharts';
 import StackedBarChart from './StackedBarChart';
 import CustomTooltipChart from './CustomTooltipChart';
+import BubbleChart from './BubbleChart';
+import NestedPieChart from './NestedPieChart';
+import WaterfallChart from './WaterfallChart';
+import GaugeChart from './GaugeChart';
+import ReferenceLineChart from './ReferenceLineChart';
+import CandlestickChart from './CandlestickChart';
 
 export default function Dashboard() {
   return (
     <div className="dashboard">
       <div className="dashboard-header">
         <h1>Recharts ダッシュボード</h1>
-        <p className="subtitle">React + Recharts で作れるグラフ全15種</p>
+        <p className="subtitle">React + Recharts で作れるグラフサンプル全21種</p>
+        <p>
+          <a href="https://recharts.github.io/en-US/examples/" target="_blank" rel="noopener noreferrer" className="doc-link">
+            公式サンプル集（もっと多くのグラフ例を見る）
+          </a>
+        </p>
       </div>
 
       <h3 className="section-title">基本グラフ</h3>
@@ -57,6 +68,24 @@ export default function Dashboard() {
         </div>
         <div className="card">
           <CustomTooltipChart />
+        </div>
+        <div className="card">
+          <BubbleChart />
+        </div>
+        <div className="card">
+          <NestedPieChart />
+        </div>
+        <div className="card">
+          <GaugeChart />
+        </div>
+        <div className="card">
+          <ReferenceLineChart />
+        </div>
+        <div className="card card-wide">
+          <CandlestickChart />
+        </div>
+        <div className="card card-wide">
+          <WaterfallChart />
         </div>
         <div className="card card-wide">
           <SalesTreemap />

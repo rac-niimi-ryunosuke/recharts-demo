@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   ComposedChart, Bar, Line, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
@@ -18,20 +19,38 @@ const data = [
 ];
 
 export default function SalesComposedChart() {
+  const [showBar, setShowBar] = useState(true);
+  const [showArea, setShowArea] = useState(true);
+  const [showLine, setShowLine] = useState(true);
+
   return (
     <div className="chart-container">
       <h2>売上・利益・前年比（複合グラフ）</h2>
+      <div className="chart-controls">
+        <label className="chart-control-check">
+          <input type="checkbox" checked={showBar} onChange={(e) => setShowBar(e.target.checked)} />
+          売上（Bar）
+        </label>
+        <label className="chart-control-check">
+          <input type="checkbox" checked={showArea} onChange={(e) => setShowArea(e.target.checked)} />
+          利益（Area）
+        </label>
+        <label className="chart-control-check">
+          <input type="checkbox" checked={showLine} onChange={(e) => setShowLine(e.target.checked)} />
+          前年比（Line）
+        </label>
+      </div>
       <ResponsiveContainer width="100%" height={300}>
         <ComposedChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="month" />
           <YAxis yAxisId="left" />
-          <YAxis yAxisId="right" orientation="right" domain={[70, 150]} unit="%" />
+          {showLine && <YAxis yAxisId="right" orientation="right" domain={[70, 150]} unit="%" />}
           <Tooltip />
           <Legend />
-          <Area yAxisId="left" type="monotone" dataKey="利益" fill="#82ca9d" stroke="#82ca9d" fillOpacity={0.3} />
-          <Bar yAxisId="left" dataKey="売上" fill="#8884d8" radius={[4, 4, 0, 0]} />
-          <Line yAxisId="right" type="monotone" dataKey="前年比" stroke="#ff7300" strokeWidth={2} dot={{ r: 4 }} />
+          {showArea && <Area yAxisId="left" type="monotone" dataKey="利益" fill="#82ca9d" stroke="#82ca9d" fillOpacity={0.3} />}
+          {showBar && <Bar yAxisId="left" dataKey="売上" fill="#8884d8" radius={[4, 4, 0, 0]} />}
+          {showLine && <Line yAxisId="right" type="monotone" dataKey="前年比" stroke="#ff7300" strokeWidth={2} dot={{ r: 4 }} />}
         </ComposedChart>
       </ResponsiveContainer>
     </div>

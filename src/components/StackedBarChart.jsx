@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
@@ -10,9 +11,22 @@ const data = [
 ];
 
 export default function StackedBarChart() {
+  const [mode, setMode] = useState('stacked');
+
+  const stackId = mode === 'stacked' ? 'a' : undefined;
+
   return (
     <div className="chart-container">
       <h2>エリア別四半期売上（積み上げ棒）</h2>
+      <div className="chart-controls">
+        <label className="chart-control-group">
+          <span>表示モード:</span>
+          <select value={mode} onChange={(e) => setMode(e.target.value)}>
+            <option value="stacked">積み上げ（stackId あり）</option>
+            <option value="grouped">グループ（stackId なし）</option>
+          </select>
+        </label>
+      </div>
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" />
@@ -20,10 +34,10 @@ export default function StackedBarChart() {
           <YAxis />
           <Tooltip formatter={(value) => [`${value}万円`]} />
           <Legend />
-          <Bar dataKey="東京" stackId="a" fill="#8884d8" radius={[0, 0, 0, 0]} />
-          <Bar dataKey="大阪" stackId="a" fill="#82ca9d" />
-          <Bar dataKey="名古屋" stackId="a" fill="#ffc658" />
-          <Bar dataKey="福岡" stackId="a" fill="#ff8042" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="東京" stackId={stackId} fill="#8884d8" radius={mode === 'grouped' ? [4, 4, 0, 0] : [0, 0, 0, 0]} />
+          <Bar dataKey="大阪" stackId={stackId} fill="#82ca9d" radius={mode === 'grouped' ? [4, 4, 0, 0] : 0} />
+          <Bar dataKey="名古屋" stackId={stackId} fill="#ffc658" radius={mode === 'grouped' ? [4, 4, 0, 0] : 0} />
+          <Bar dataKey="福岡" stackId={stackId} fill="#ff8042" radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>

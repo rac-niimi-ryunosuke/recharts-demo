@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
@@ -18,17 +19,49 @@ const data = [
 ];
 
 export default function SalesBarChart() {
+  const [layout, setLayout] = useState('horizontal');
+  const [rounded, setRounded] = useState(true);
+  const [showGrid, setShowGrid] = useState(true);
+
+  const isVertical = layout === 'vertical';
+
   return (
     <div className="chart-container">
       <h2>月別売上データ（万円）</h2>
-      <ResponsiveContainer width="100%" height={300}>
-        <BarChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="month" />
-          <YAxis />
+      <div className="chart-controls">
+        <label className="chart-control-group">
+          <span>レイアウト:</span>
+          <select value={layout} onChange={(e) => setLayout(e.target.value)}>
+            <option value="horizontal">横軸に月（通常）</option>
+            <option value="vertical">縦軸に月（横棒）</option>
+          </select>
+        </label>
+        <label className="chart-control-check">
+          <input type="checkbox" checked={rounded} onChange={(e) => setRounded(e.target.checked)} />
+          角丸 radius
+        </label>
+        <label className="chart-control-check">
+          <input type="checkbox" checked={showGrid} onChange={(e) => setShowGrid(e.target.checked)} />
+          グリッド線
+        </label>
+      </div>
+      <ResponsiveContainer width="100%" height={isVertical ? 500 : 300}>
+        <BarChart data={data} layout={isVertical ? 'vertical' : 'horizontal'} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+          {showGrid && <CartesianGrid strokeDasharray="3 3" />}
+          {isVertical ? (
+            <>
+              <XAxis type="number" />
+              <YAxis dataKey="month" type="category" width={40} />
+            </>
+          ) : (
+            <>
+              <XAxis dataKey="month" />
+              <YAxis />
+            </>
+          )}
           <Tooltip formatter={(value) => [`${value}万円`, '売上']} />
           <Legend />
-          <Bar dataKey="売上" fill="#8884d8" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="売上" fill="#8884d8" radius={rounded ? (isVertical ? [0, 4, 4, 0] : [4, 4, 0, 0]) : 0} />
         </BarChart>
       </ResponsiveContainer>
     </div>
