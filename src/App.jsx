@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Dashboard from './components/Dashboard';
+import AboutRecharts from './components/AboutRecharts';
 import ChartPage from './components/ChartPage';
 import SalesBarChart from './components/SalesBarChart';
 import AccessLineChart from './components/AccessLineChart';
@@ -21,6 +22,7 @@ import './App.css';
 
 const tabs = [
   { id: 'dashboard', label: 'ダッシュボード' },
+  { id: 'about', label: 'Rechartsとは' },
   { id: 'bar', label: '棒グラフ' },
   { id: 'stacked', label: '積み上げ棒' },
   { id: 'line', label: '折れ線' },
@@ -59,6 +61,18 @@ const chartComponents = {
 export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
 
+  const renderContent = () => {
+    if (activeTab === 'dashboard') return <Dashboard />;
+    if (activeTab === 'about') return <AboutRecharts />;
+    return (
+      <ChartPage
+        chartId={activeTab}
+        chart={chartComponents[activeTab]}
+        explanation={explanations[activeTab]}
+      />
+    );
+  };
+
   return (
     <div className="app">
       <nav className="tab-nav">
@@ -73,15 +87,7 @@ export default function App() {
         ))}
       </nav>
       <main className="main-content">
-        {activeTab === 'dashboard' ? (
-          <Dashboard />
-        ) : (
-          <ChartPage
-            chartId={activeTab}
-            chart={chartComponents[activeTab]}
-            explanation={explanations[activeTab]}
-          />
-        )}
+        {renderContent()}
       </main>
     </div>
   );

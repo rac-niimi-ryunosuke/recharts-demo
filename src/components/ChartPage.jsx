@@ -1,8 +1,4 @@
-import scripts from '../data/scripts';
-
-export default function ChartPage({ chartId, chart: Chart, explanation }) {
-  const script = scripts[chartId];
-
+export default function ChartPage({ chart: Chart, explanation }) {
   return (
     <div className="chart-page">
       <div className="chart-page-graph">
@@ -35,17 +31,8 @@ export default function ChartPage({ chartId, chart: Chart, explanation }) {
 
           {explanation.useCase && (
             <div className="explanation-section">
-              <h4>実務での使いどころ</h4>
+              <h4>使いどころ</h4>
               <p>{explanation.useCase}</p>
-            </div>
-          )}
-
-          {script && (
-            <div className="explanation-section script-section">
-              <h4>トークスクリプト</h4>
-              {script.map((line, i) => (
-                <p key={i} className="script-line">{line}</p>
-              ))}
             </div>
           )}
         </div>
